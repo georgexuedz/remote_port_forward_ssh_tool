@@ -240,7 +240,7 @@ static int create_one_new_process(type_process_info* p)
     // 子进程
     if (pid == 0)
     {
-        int status = run();
+        int status = run(g_config.config_path); 
         jl_debug("son process exit, status:[%d]\n", status);
         // 需要退出，不然会执行父进程的代码
         exit(0);
@@ -313,9 +313,9 @@ void start()
 
 int init()
 {
-    if (jl_init_json(CONFIGURE_PATH) != 0)
+    if (jl_init_json(g_config.config_path) != 0) 
     {
-        jl_err("init jl_json [%s] err!\n", CONFIGURE_PATH); 
+        jl_err("init jl_json [%s] err!\n", g_config.config_path); 
         return -1;
     }
 
@@ -336,8 +336,46 @@ int init()
     return 0;
 }
 
+int usage()
+{
+    printf("nc2ctrl -f CONFIG_FILE!\n");
+}
+
+int read_input_arg(
+    char** p,
+    int argc,
+    char* argv[])
+{
+    int oc;
+    char *b_opt_arg;
+
+    while((oc = getopt(argc, argv, "f:")) != -1)
+    {
+        switch(oc)
+        {
+            case 'f':
+                *p = optarg;
+                printf("config_file[%s]\n", *p);
+                return 0;
+            default:
+                usage();
+                break;
+        }
+    }
+
+    return -1;
+}
+
 int main(int argc, char *argv[])
 {
+    if (read_input_arg(&(g_config.config_path),
+                       argc,
+                       argv) != 0) 
+    {
+        jl_err("invalid args!\n");
+        return 1;
+    }
+
     if (init() != 0)
     {
         jl_err("init err!\n");

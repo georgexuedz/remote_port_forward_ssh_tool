@@ -174,9 +174,15 @@ static int init_local_config()
     return 0;
 }
 
-static int init()
+static int init(const char* config_path)
 {
-    if (jl_init_json(CONFIGURE_PATH) != 0)
+    if (!config_path) 
+    {
+        jl_err("null config_path!\n"); 
+        return -1;
+    }
+
+    if (jl_init_json(config_path) != 0)
     {
         jl_err("init jl_json err!\n"); 
         return -1;
@@ -717,12 +723,12 @@ static int listen_agent_ssh_client()
     return deal_one_new_connection(g_global_config.agent_ssh.sess, channel);
 }
 
-int run()
+int run(char* config_path)
 {
     int status = 0;
 
     // ≥ı ºªØ
-    if (init() != 0)
+    if (init(config_path) != 0) 
     {
         goto fail;
     }

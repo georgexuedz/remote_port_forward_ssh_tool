@@ -31,12 +31,6 @@ extern "C" {
 #include "jl_libssh2.h"
 #include "jl_json.h"
 
-#ifdef __DEBUG__
-#define CONFIGURE_PATH "nc2rctrl.conf"
-#else
-#define CONFIGURE_PATH "/usr/conf/nc2rctrl.conf"
-#endif
-
 #define TCP_FORWARD_TOUCH_CMD "echo \"%d\" > %s/%s"
 
 #define TCP_FORWARD_CMD_MAX_LEN 128 * 100

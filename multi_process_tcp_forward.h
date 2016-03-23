@@ -53,6 +53,7 @@ typedef struct CONFIG_INFO
     int restart_time;
     int exit_ssh_time;
     char* lock_file_path; 
+    char* config_path;
 }type_config_info;
 
 typedef struct MULTI_PROCESS_INFO
