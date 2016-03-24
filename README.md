@@ -29,3 +29,10 @@
 >>>>			C.内容
 >>>>>				端口数字
 
+##<a name="table"/>device
+字段  | 意义
+------------- | -------------
+username  | 运行环境登录远程环境的ssh用户
+password  | 运行环境登录远程环境的ssh密码
+bindhost  | 运行环境登录远程环境的ssh密码
+ssh_listen_port |  运行环境登录远程环境的ssh密码
