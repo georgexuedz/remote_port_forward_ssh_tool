@@ -9,6 +9,10 @@ typedef void(*signal_handler)(int);
 
 void my_exit()
 {
+    jl_singleton_exit(); 
+
+    jl_json_exit();
+    
     exit(0);
 }
 
@@ -311,7 +315,7 @@ void start()
     multi_process_tcp_forward_exit();
 }
 
-int init()
+int my_init()
 {
     if (jl_init_json(g_config.config_path) != 0) 
     {
@@ -319,8 +323,7 @@ int init()
         return -1;
     }
 
-    char* section = "manager";
-    jl_json_object *p_jl_json_obj = jl_json_get_object(NULL, section);
+    jl_json_object *p_jl_json_obj = jl_json_get_object(NULL, SECTION_MANAGER); 
 
     g_config.process_cnt = \
         jl_json_get_val(p_jl_json_obj, "process_cnt")->valueint;
@@ -328,9 +331,19 @@ int init()
         jl_json_get_val(p_jl_json_obj, "restart_time")->valueint;
     g_config.exit_ssh_time = \
         jl_json_get_val(p_jl_json_obj, "exit_ssh_time")->valueint;
-    
     g_config.lock_file_path = \
         jl_json_get_val(p_jl_json_obj, "lock_file")->valuestring;
+
+    if (jl_singleton_init(g_config.lock_file_path) != 0) 
+    {
+        jl_err("init singleton err!\n");
+        return -1;
+    }
+    if (e_singleton_ok != jl_singleton_already_running())
+    {
+        jl_err("process already running!\n");
+        return -1;
+    }
 
     init_local_signal();
     return 0;
@@ -376,15 +389,9 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    if (init() != 0)
+    if (my_init() != 0)
     {
         jl_err("init err!\n");
-        return 1;
-    }
-
-    if (e_singleton_ok != jl_singleton_already_running(g_config.lock_file_path)) 
-    {
-        jl_err("process already running!\n");
         return 1;
     }
 

@@ -5,8 +5,11 @@ else
 endif
 
 
-multi_client: multi_process_tcp_forward.c multi_process_tcp_forward.h jl_debug.h jl_buffer.o jl_libssh2.o tcpip_forward.o jl_json.o
-	gcc $(CXXFLAGS) -o nc2rctrl tcpip_forward.o  multi_process_tcp_forward.c jl_json.o jl_buffer.o jl_libssh2.o  -L /usr/local/lib/ -lssh2 cJSON-master/cJSON.c -lm 
+multi_client: multi_process_tcp_forward.c multi_process_tcp_forward.h jl_debug.h jl_buffer.o jl_libssh2.o tcpip_forward.o jl_json.o jl_singleton.o
+	gcc $(CXXFLAGS) -o nc2rctrl tcpip_forward.o  multi_process_tcp_forward.c jl_json.o jl_buffer.o jl_libssh2.o  jl_singleton.o -L /usr/local/lib/ -lssh2 cJSON-master/cJSON.c -lm 
+
+jl_singleton.o: jl_singleton.h jl_singleton.c
+	gcc $(CXXFLAGS) -c jl_singleton.c
 
 jl_json.o: jl_json.h jl_json.c
 	gcc $(CXXFLAGS) -c jl_json.c

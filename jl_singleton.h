@@ -29,48 +29,12 @@ typedef enum
     e_singleton_ok = 0
 }e_singleton_status;
 
-static int lockfile(int fd)
-{
-    struct flock fl;
 
-    fl.l_type = F_WRLCK;
-    fl.l_start = 0;
-    fl.l_whence = SEEK_SET;
-    fl.l_len = 0;
+e_singleton_status jl_singleton_already_running();
 
-    return(fcntl(fd, F_SETLK, &fl));
-}
+int jl_singleton_init();
 
-e_singleton_status jl_singleton_already_running(const char *filename)
-{
-    int fd;
-    char buf[16];
-
-    fd = open(filename, O_RDWR | O_CREAT, LOCKMODE);
-    if (fd < 0) 
-    {
-        printf("can't open %s: %m\n", filename);
-        return e_singleton_err; 
-    }
-
-    if (lockfile(fd) == 0) 
-    {
-        ftruncate(fd, 0);
-        sprintf(buf, "%ld", (long)getpid());
-        write(fd, buf, strlen(buf) + 1);
-        return e_singleton_ok; 
-    }
-
-    if (errno == EACCES || errno == EAGAIN) 
-    {
-        printf("file: %s already locked", filename);
-        close(fd);
-        return e_singleton_exit;
-    }
-
-    printf("can't lock %s: %m\n", filename);
-    return e_singleton_err;
-}
+int jl_singleton_exit();
 
 #ifdef __cplusplus
 }

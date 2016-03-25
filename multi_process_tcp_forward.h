@@ -20,6 +20,7 @@ extern "C" {
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include "jl_singleton.h"
 #include "jl_json.h"
 #include "jl_debug.h"
 #include "jl_singleton.h"
@@ -31,7 +32,7 @@ extern "C" {
 #define MAX_PROCESS_CNT 100
 #define FOR_EACH_PROCESS(i, k) for(i = 0; i < k; ++i)
 
-
+#define SECTION_MANAGER "manager"
 
 enum
 {
