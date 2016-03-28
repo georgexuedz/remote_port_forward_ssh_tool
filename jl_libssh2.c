@@ -438,29 +438,6 @@ int jl_libssh2_init()
     return 0;
 }
 
-#if 0
-static int find_idx(
-    void* arr[],
-    void *p)
-{
-    if (!p_jl_manager || !p_arr) 
-    {
-        return -1;
-    }
-
-    int idx = 0;
-    for (; idx < JL_LIBSSH2_MAX_MANAGER_CNT; ++idx)
-    {
-        if (p == arr[idx]) 
-        {
-            return idx;
-        }
-    }
-
-    return -1;
-}
-#endif
-
 static int jl_libssh2_clear_type(
     enum_libssh2_type libssh2_type, 
     void* p)
