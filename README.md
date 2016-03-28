@@ -1,5 +1,7 @@
 # Tutorial
 
+![架构图](/pic/frame.png)
+
 #1.编译：  
 >	1) 编译环境   
 >>	  	1.`安装libssh2`
