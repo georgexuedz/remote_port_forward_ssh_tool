@@ -1,6 +1,10 @@
 # Tutorial
 
-![架构图](/pic/frame_pic.png "架构图")
+![架构图](/pic/frame_pic.png "架构图")   
+
+![需求图](/pic/demand.png "需求图")   
+
+![流程图](/pic/flow.png "流程图")   
 
 #1.编译：  
 >	1) 编译环境   
