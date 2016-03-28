@@ -1,6 +1,6 @@
 # Tutorial
 
-![架构图](/pic/frame_pic.png)
+![架构图](/pic/frame_pic.png “架构图”)
 
 #1.编译：  
 >	1) 编译环境   
