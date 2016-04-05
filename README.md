@@ -6,6 +6,11 @@
 
 ![流程图](/pic/flow.png "流程图")   
 
+#0.安装:    
+         git clone  https://github.com/georgexuedz/remote_port_forward_ssh_tool.git   
+         git submodule update --init --recursive         
+         make ver=debug
+
 #1.编译：  
 >	1) 编译环境   
 >>	  	1.`安装libssh2`
