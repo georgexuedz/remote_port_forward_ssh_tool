@@ -15,7 +15,7 @@ extern "C" {
 #include <unistd.h>
 #include <errno.h>
 
-#include "cJSON-master/cJSON.h"
+#include "cJSON/cJSON.h"
 
 #include "jl_debug.h"
 #include "jl_buffer.h"
