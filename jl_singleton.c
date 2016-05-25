@@ -66,6 +66,7 @@ int jl_singleton_exit()
     if (s_fd > 0)
     {
         close(s_fd); 
+        s_fd = 0;
     }
 
     return 0;
