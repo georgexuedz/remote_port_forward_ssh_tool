@@ -1,3 +1,3 @@
 [submodule "cJSON"]
-	path = cJSON
+	path = src/cJSON
 	url = https://github.com/kbranigan/cJSON.git
