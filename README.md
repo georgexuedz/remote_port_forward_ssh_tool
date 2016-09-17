@@ -41,22 +41,41 @@ jeDate除了包含 日历可以直接显示与点击显示、日期标注点、�
         "bind_host": 外网ssh服务的地址,
         "ssh_listen_port": 外网ssh服务监听端口,
         
-***reverse_ssh_info***
+***reverse_ssh_info 远程ssh反向代理信息***
 
         "want_port": 内网连接外网ssh服务，请求分配的端口，这里应该默认为0，让ssh服务自动分配，不需要修改,
-        "listen_host": "localhost",
-        "device_id": 废弃,
-        "port_file_path": "/tmp/",
-        "exit_idle_time": 600
+        "listen_host": 外网代理服务器访问ssh服务的host，如果为同一个设备，则"localhost",
+        "port_file_path": 代理服务器保持ssh连接的文件路径,文件名用mac地址命名,内容是端口号,
+        "exit_idle_time": 断开连接超时,
         
         
-***manager***
+***manager 管理进程***
 
-        "process_cnt": 1,
-        "restart_time": 86400,
-        "exit_ssh_time": 1800,
-        "lock_file": "/var/run/nc2rctrl.pid"
+        "process_cnt": 开启连接进程数量,
+        "restart_time": 数据进程重启超时时间（秒）,防止异常导致一直不能重启,
+        "exit_ssh_time": 无数据传输超时重启时间（秒）,
+        "lock_file": 单例加锁文件
+
+**运行**
+
+
+***代理服务器***
+
+    目录 /data/nc2rctrl, 添加读写权限，存储连接端口文件, 格式例子： /data/nc2rctrl/00-0C-29-66-1E-2A
+
+***内网服务器***
 
 
 
-============
+    /usr/sbin/nc2rctrl -f nc2ctrl.conf
+
+
+# 保护机制
+    1. 如果连接之后，经过半小时，管理进程就会发送信号sigint给隧道进程，如果接收到信号，并且还没登录，隧道就退出重启；或者登陆后10分钟没有操作且没有数据传递，隧道就断开重启；
+    2. 一天之后，管理进程重启，杀死所有隧道，全部重启，防止资源泄漏；
+    3. cron每天，尝试启动一次管理进程，如果已经有管理进程在运行，就退出；
+    
+    
+    
+    
+    
