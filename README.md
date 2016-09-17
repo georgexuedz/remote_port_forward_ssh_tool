@@ -2,14 +2,14 @@ ssh远程端口复用工具
 =======
 
 
-该工具，主要解决维护内网服务器。举例的场景就是内网的路由器，wifi或者防火墙等网络设备。
+该工具，主要解决维护内网服务器。举例的场景就是内网的路由器，wifi或者防火墙等网络设备。  
 原理就是ssh的远程反向隧道，让内网的ssh客户端连接代理服务器的ssh服务，建立连接，然后用户就可以登录代理服务器，使用建立的连接来ssh登录
-内网的ssh服务。
-完善的多种保护机制，让该工具的稳定性大大提高，基于C语言，执行效率高。
+内网的ssh服务。  
+完善的多种保护机制，让该工具的稳定性大大提高，基于C语言，执行效率高。  
 主要是使用了libssh2这个C语言库，文档较少，遇到问题比较难求助，因此，只能自力更生，看源码啦！看源码的时候需要和ssh的协议对照看，才能
-了解大部分的逻辑。
-由于该工具，基于C语言，因此很多还需要完善，希望大家一起完善哈！QQ:845094708, george
-
+了解大部分的逻辑。 
+由于该工具，基于C语言，因此很多还需要完善，希望大家一起完善哈！QQ:845094708, george   
+ 
 
 * [下载设计文档](https://github.com/georgexuedz/remote_port_forward_ssh_tool/blob/master/doc/requirement_analysis/solution_choosing.docx)
 * [下载使用文档](https://github.com/georgexuedz/remote_port_forward_ssh_tool/blob/master/doc/guide/user_guide.docx)
