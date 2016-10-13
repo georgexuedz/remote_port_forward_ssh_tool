@@ -3,6 +3,7 @@
 jl_buffer_manager g_jl_buffer_manager;
 
 
+// 全局变量，默认初始化为0，不调用也没事
 inline int jl_init_buffer()
 {
     int idx = 0;
