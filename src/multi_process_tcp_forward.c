@@ -13,6 +13,8 @@ void my_exit()
 
     jl_json_exit();
     
+    jl_clear_buffer();
+    
     exit(0);
 }
 
@@ -232,7 +234,7 @@ static int create_one_new_process(type_process_info* p)
         return -1;
     }
 
-    // ¸¸½ø³Ì
+    // çˆ¶è¿›ç¨‹
     if (pid > 0)
     {
         p->pid = pid;
@@ -241,12 +243,12 @@ static int create_one_new_process(type_process_info* p)
         return 0;
     }
 
-    // ×Ó½ø³Ì
+    // å­è¿›ç¨‹
     if (pid == 0)
     {
         int status = run(g_config.config_path); 
         jl_debug("son process exit, status:[%d]\n", status);
-        // ĞèÒªÍË³ö£¬²»È»»áÖ´ĞĞ¸¸½ø³ÌµÄ´úÂë
+        // éœ€è¦é€€å‡ºï¼Œä¸ç„¶ä¼šæ‰§è¡Œçˆ¶è¿›ç¨‹çš„ä»£ç 
         exit(0);
     }
 }
@@ -258,22 +260,22 @@ static void control()
 
     while (1)
     {
-        // ³¬Ê±
+        // è¶…æ—¶
         if (time(NULL) - start_time > g_config.restart_time) 
         {
             break;
         }
         sleep(1);
 
-        // Ì«¾ÃµÄ·¢ËÍ¶Ï¿ªĞÅºÅ
+        // å¤ªä¹…çš„å‘é€æ–­å¼€ä¿¡å·
         wait_timeout_arr();
         sleep(1);
 
-        // µÈ´ıÍË³ö
+        // ç­‰å¾…é€€å‡º
         wait_procss_arr();
         sleep(1);
 
-        // ²éÕÒ¿ÕÏĞ
+        // æŸ¥æ‰¾ç©ºé—²
         p = find_idle();
         if (p)
         {
@@ -317,6 +319,11 @@ void start()
 
 int my_init()
 {
+    if (jl_init_buffer() != 0)
+    {
+        jl_err("init jl_buffer err!\n"); 
+        return -1;
+    }
     if (jl_init_json(g_config.config_path) != 0) 
     {
         jl_err("init jl_json [%s] err!\n", g_config.config_path); 
