@@ -1,16 +1,16 @@
 /*
- *  Created on: 2016Äê3ÔÂ1ÈÕ
+ *  Created on: 2016å¹´3æœˆ1æ—¥
  *      Author: xuedz
  */
 
 #include "tcpip_forward.h"
 
-// È«¾ÖÅäÖÃ
+// å…¨å±€é…ç½®
 type_global_config g_global_config;
 
 static e_ssh_status s_e_ssh_status;
 
-// ĞÅºÅ´¦Àíº¯Êı
+// ä¿¡å·å¤„ç†å‡½æ•°
 static int s_sig_kill = 0;
 static int s_sig_oth = 0;
 typedef void(*signal_handler)(int);
@@ -182,14 +182,14 @@ static int init(const char* config_path)
         return -1;
     }
 
-    if (jl_init_json(config_path) != 0)
-    {
-        jl_err("init jl_json err!\n"); 
-        return -1;
-    }
     if (jl_init_buffer() != 0)
     {
         jl_err("init jl_buffer err!\n"); 
+        return -1;
+    }
+    if (jl_init_json(config_path) != 0)
+    {
+        jl_err("init jl_json err!\n"); 
         return -1;
     }
 
@@ -347,7 +347,7 @@ static int touch_id_file(
 
 fail:
 
-    // TODO: ĞèÒªÊ¹ÓÃ×Ô¼ºµÄdestroy£¬ÏÈ²»´¦Àí,µÈ×îºó´¦ÀíÒ²¿ÉÒÔ
+    // TODO: éœ€è¦ä½¿ç”¨è‡ªå·±çš„destroyï¼Œå…ˆä¸å¤„ç†,ç­‰æœ€åå¤„ç†ä¹Ÿå¯ä»¥
     // libssh2_channel_free(g_remote_libssh2_info.channel);
     jl_free_buffer(p_jl_buffer);
     return ret;
@@ -388,7 +388,7 @@ int connect_socket(
 
 static int pass_through_nat() 
 {
-    // 1.Á¬½Ó´úÀí·şÎñÆ÷µÄssh·şÎñ
+    // 1.è¿æ¥ä»£ç†æœåŠ¡å™¨çš„sshæœåŠ¡
     g_global_config.agent_ssh.sock = connect_socket(
         g_global_config.agent_ssh.server_host, 
         g_global_config.agent_ssh.listen_port);
@@ -398,7 +398,7 @@ static int pass_through_nat()
         return -1;
     }
     
-    // 2.´´½¨session
+    // 2.åˆ›å»ºsession
     g_global_config.agent_ssh.sess = 
         jl_libssh2_try_create_session(g_global_config.agent_ssh.sock, 
                                       g_global_config.agent_ssh.username, 
@@ -408,7 +408,7 @@ static int pass_through_nat()
         return -1;
     }
     
-    // 3.»ñÈ¡listener, µÃµ½Ô¶³Ì¶Ë¿Ú
+    // 3.è·å–listener, å¾—åˆ°è¿œç¨‹ç«¯å£
     g_global_config.agent_ssh.listener = 
         jl_libssh2_try_create_listener(g_global_config.agent_ssh.sess, 
                                        g_global_config.reverse_ssh.listen_host, 
@@ -420,7 +420,7 @@ static int pass_through_nat()
         return -1;
     }
 
-    // 4.Ô¶³ÌĞ´±êÊ¶ÎÄ¼ş
+    // 4.è¿œç¨‹å†™æ ‡è¯†æ–‡ä»¶
     if (touch_id_file(g_global_config.agent_ssh.sock,
                       g_global_config.agent_ssh.sess) != 0) 
     {
@@ -432,7 +432,7 @@ static int pass_through_nat()
 
 static int connect_local_ssh_server()
 {
-    // 1.Á¬½Ó´úÀí·şÎñÆ÷µÄssh·şÎñ
+    // 1.è¿æ¥ä»£ç†æœåŠ¡å™¨çš„sshæœåŠ¡
     g_global_config.device_ssh.sock = connect_socket(
         g_global_config.device_ssh.server_host, 
         g_global_config.device_ssh.listen_port); 
@@ -493,10 +493,10 @@ static enum_non_block_status agent_to_device(
         return e_non_block_err;
     }
 
-    // Ñ­»·´Óssh¿Í»§¶Ë·¢ËÍ¸øssh·şÎñÆ÷
+    // å¾ªç¯ä»sshå®¢æˆ·ç«¯å‘é€ç»™sshæœåŠ¡å™¨
     while (1)
     {
-        // 1.´Ó´úÀíssh¿Í»§¶Ë¶ÁÈ¡ÏûÏ¢
+        // 1.ä»ä»£ç†sshå®¢æˆ·ç«¯è¯»å–æ¶ˆæ¯
         int read_cnt = libssh2_channel_read(channel, buf, max_buf_len); 
         if (read_cnt == LIBSSH2_ERROR_EAGAIN) 
         {
@@ -517,7 +517,7 @@ static enum_non_block_status agent_to_device(
             return e_non_block_err;
         }
 
-        // 2.×ª·¢¸ø·şÎñÆ÷
+        // 2.è½¬å‘ç»™æœåŠ¡å™¨
         if (libssh2_channel_eof(channel))
         {
             jl_err("channel eof!\n");
@@ -705,10 +705,10 @@ static int deal_one_new_connection(
 
 static int listen_agent_ssh_client()
 {
-    // ÉèÖÃ×èÈû
+    // è®¾ç½®é˜»å¡
     libssh2_session_set_blocking(g_global_config.agent_ssh.sess, 1); 
 
-    // µÈ´ıÔ¶³ÌÁ¬½Ó
+    // ç­‰å¾…è¿œç¨‹è¿æ¥
     LIBSSH2_CHANNEL* channel = 
         jl_libssh2_try_accept_tcpip_forward_req(
             g_global_config.agent_ssh.sess,
@@ -727,25 +727,25 @@ int run(char* config_path)
 {
     int status = 0;
 
-    // ³õÊ¼»¯
+    // åˆå§‹åŒ–
     if (init(config_path) != 0) 
     {
         goto fail;
     }
 
-    // ´òÍ¨ÍâÍøµ½ÄÚÍø
+    // æ‰“é€šå¤–ç½‘åˆ°å†…ç½‘
     if (pass_through_nat() < 0) 
     {
         goto fail;
     }
 
-    // Á¬½ÓÄÚÍøµÄssh·şÎñÆ÷
+    // è¿æ¥å†…ç½‘çš„sshæœåŠ¡å™¨
     if (connect_local_ssh_server() < 0)
     {
         goto fail;
     }
 
-    // ¼àÌıssh¿Í»§¶Ë
+    // ç›‘å¬sshå®¢æˆ·ç«¯
     if (listen_agent_ssh_client() < 0) 
     {
         goto fail;
@@ -753,7 +753,7 @@ int run(char* config_path)
     status = 1;
 
 fail:
-    // ÇåÀí×ÊÔ´
+    // æ¸…ç†èµ„æº
     tcpip_forward_exit();
 
     return status;
