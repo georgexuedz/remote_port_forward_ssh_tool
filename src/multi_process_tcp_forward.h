@@ -20,6 +20,7 @@ extern "C" {
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include "jl_buffer.h"
 #include "jl_singleton.h"
 #include "jl_json.h"
 #include "jl_debug.h"
