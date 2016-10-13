@@ -16,27 +16,6 @@ inline int jl_init_buffer()
     return 0;
 }
 
-inline int jl_clear_buffer()
-{
-    int idx = 0;
-    for (; idx < JL_BUFFER_MAX_BUFFER_CNT; ++idx)
-    {
-        jl_buffer *p = g_jl_buffer_manager.pool + idx; 
-
-        char *p_buf = p->buf; 
-        if (p_buf)
-        {
-            free(p_buf);
-        }
-
-        p->buf = NULL;
-        p->buf_len = 0;
-        p->max_buf_len = 0;
-    }
-
-    return 0;
-}
-
 inline static int find_empty_buffer_idx()
 {
     int idx = 0;
@@ -98,15 +77,27 @@ inline void jl_free_buffer(jl_buffer* p_jl_buffer)
         return ;
     }
 
+    p_jl_buffer->buf_len = 0;
+    p_jl_buffer->max_buf_len = 0;
+    
     if (!p_jl_buffer->buf) 
     {
         return ;
     }
 
     free(p_jl_buffer->buf);
-
     p_jl_buffer->buf = NULL;
-    p_jl_buffer->buf_len = 0;
-    p_jl_buffer->max_buf_len = 0;
+}
+
+inline int jl_clear_buffer()
+{
+    int idx = 0;
+    for (; idx < JL_BUFFER_MAX_BUFFER_CNT; ++idx)
+    {
+        jl_buffer *p = g_jl_buffer_manager.pool + idx; 
+        jl_free_buffer(p);
+    }
+
+    return 0;
 }
 
